@@ -1,0 +1,10 @@
+{
+  "name": "rpc_client",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ponomarev Denis",
+  "license": "Proprietary"
+}
