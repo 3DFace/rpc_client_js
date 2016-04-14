@@ -2,8 +2,6 @@
 
 define(function(require){
 
-	var Promise = require('promise');
-
 	/**
 	 * @param {object} under_layer
 	 * @param {function} log_request_fn
