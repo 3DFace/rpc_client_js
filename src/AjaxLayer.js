@@ -1,45 +1,40 @@
 /* author: Ponomarev Denis <ponomarev@gmail.com> */
 
-define(function(require){
+/**
+ * @param {string} url RPC-server URL
+ * @constructor
+ */
+function AjaxLayer(url){
 
-	var Promise = require('promise');
+	this.send = function(request_str){
 
-	/**
-	 * @param {string} url RPC-server URL
-	 * @constructor
-	 */
-	function AjaxLayer(url){
+		return new Promise(function(resolve, reject){
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", url, true);
+			xhr.withCredentials = true;
 
-		this.send = function(request){
-
-			return new Promise(function(resolve, reject){
-				var xhr = new XMLHttpRequest();
-				xhr.open("POST", url, true);
-				xhr.withCredentials = true;
-
-				xhr.onload = function(){
-					if(this.status >= 200 && this.status < 300){
-						resolve(xhr.response);
-					}else{
-						reject({
-							status: this.status,
-							statusText: xhr.statusText
-						});
-					}
-				};
-
-				xhr.onerror = function(){
+			xhr.onload = function(){
+				if(this.status >= 200 && this.status < 300){
+					resolve(xhr.response);
+				}else{
 					reject({
 						status: this.status,
 						statusText: xhr.statusText
 					});
-				};
+				}
+			};
 
-				xhr.send(request);
-			});
+			xhr.onerror = function(){
+				reject({
+					status: this.status,
+					statusText: xhr.statusText
+				});
+			};
 
-		}
+			xhr.send(request_str);
+		});
+
 	}
+}
 
-	return AjaxLayer;
-});
+export default AjaxLayer;

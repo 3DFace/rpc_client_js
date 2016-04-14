@@ -1,30 +1,26 @@
 /* author: Ponomarev Denis <ponomarev@gmail.com> */
 
-define(function(require){
+import BatchLayer from "./BatchLayer";
 
-	var BatchLayer = require('./BatchLayer');
+/**
+ * @param {object} protocol_layer
+ * @constructor
+ */
+function RpcClient(protocol_layer){
 
-	/**
-	 * @param protocol_layer
-	 * @constructor
-	 */
-	function RpcClient(protocol_layer){
+	var client = this;
 
-		var client = this;
+	client.call = function(service, method, params){
+		return protocol_layer.send([[service, method, params]])[0];
+	};
 
-		client.call = function(service, method, params){
-			return protocol_layer.send([[service, method, params]])[0];
-		};
+	client.batch = function(callback){
+		var batchLayer = new BatchLayer();
+		var batchClient = new RpcClient(batchLayer);
+		callback(batchClient);
+		return batchLayer.flush(protocol_layer);
+	};
 
-		client.batch = function(callback){
-			var batchLayer = new BatchLayer();
-			var batchClient = new RpcClient(batchLayer);
-			callback(batchClient);
-			return batchLayer.flush(protocol_layer);
-		};
+}
 
-	}
-
-	return RpcClient;
-
-});
+export default RpcClient;

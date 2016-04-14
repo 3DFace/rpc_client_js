@@ -1,43 +1,36 @@
 /* author: Ponomarev Denis <ponomarev@gmail.com> */
 
-define(function(require){
+/**
+ * @param {object} text_transport_layer
+ * @constructor
+ */
+function JsonLayer(text_transport_layer){
 
-	var Promise = require('promise');
+	this.send = function(request){
 
-	/**
-	 *
-	 * @param {object} under_layer
-	 * @constructor
-	 */
-	function JsonLayer(under_layer){
+		return new Promise(function(resolve, reject){
+			try{
+				var json = JSON.stringify(request);
 
-		this.send = function(request){
-
-			return new Promise(function(resolve, reject){
-				try{
-					var json = JSON.stringify(request);
-
-					under_layer.send(json).then(function(json_response){
-						try{
-							var response = JSON.parse(json_response);
-						}catch(e){
-							reject({
-								name: "JsonLayerError",
-								message: e.name + ": " + e.message + "\n" + json_response
-							});
-						}
-						resolve(response);
-					}, reject);
-				}catch(e){
-					reject({
-						name: "JsonLayerError",
-						message: e.name + ": " + e.message
-					});
-				}
-			});
-		}
+				text_transport_layer.send(json).then(function(json_response){
+					try{
+						var response = JSON.parse(json_response);
+					}catch(e){
+						reject({
+							name: "JsonLayerError",
+							message: e.name + ": " + e.message + "\n" + json_response
+						});
+					}
+					resolve(response);
+				}, reject);
+			}catch(e){
+				reject({
+					name: "JsonLayerError",
+					message: e.name + ": " + e.message
+				});
+			}
+		});
 	}
+}
 
-	return JsonLayer;
-
-});
+export default JsonLayer;
