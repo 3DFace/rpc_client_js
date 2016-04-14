@@ -2,6 +2,7 @@
   "name": "rpc_client",
   "version": "0.0.0",
   "description": "",
+  "main": "./src/index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
