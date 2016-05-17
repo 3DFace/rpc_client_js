@@ -21,11 +21,10 @@ function BatchLayer(){
 
 	layer.flush = function(protocol_layer){
 		var promises = protocol_layer.send(calls_acc);
-		var new_promises = new Array(promises.length);
 		for(var i = 0; i < callbacks_acc.length; i++){
-			new_promises[i] = promises[i].then(callbacks_acc[i][0], callbacks_acc[1]);
+			promises[i].then(callbacks_acc[i][0], callbacks_acc[i][1]);
 		}
-		return new_promises;
+		return promises;
 	};
 
 }

@@ -22,23 +22,19 @@ function LogLayer(protocol_layer, log_request_fn, log_response_fn, log_error_fn)
 		var promises = protocol_layer.send(calls);
 
 		if(log_response_fn || log_error_fn){
-			var new_promises = new Array(promises.length);
 			for(i = 0; i < promises.length; i++){
 				(function(i){
-					new_promises[i] = promises[i].then(function(response){
+					promises[i].then(function(response){
 						log_response_fn && log_response_fn("result[" + i + "]", response);
 						return response;
 					}, function(error){
 						var logger = log_error_fn || log_response_fn;
 						logger && logger("error[" + i + "]", error);
-						throw error;
 					})
 				})(i);
 			}
-			return new_promises;
-		}else{
-			return promises;
 		}
+		return promises;
 	}
 }
 
