@@ -18,7 +18,8 @@ function JsonLayer(text_transport_layer){
 					}catch(e){
 						reject({
 							name: "JsonLayerError",
-							message: e.name + ": " + e.message + "\n" + json_response
+							message: e.name + ": " + e.message + "\n" + json_response,
+							code: 1
 						});
 					}
 					resolve(response);
@@ -26,7 +27,8 @@ function JsonLayer(text_transport_layer){
 			}catch(e){
 				reject({
 					name: "JsonLayerError",
-					message: e.name + ": " + e.message
+					message: e.name + ": " + e.message,
+					code: 1
 				});
 			}
 		});

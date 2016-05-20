@@ -2,16 +2,16 @@
 
 function extractResult(response){
 	if(typeof response !== "object"){
-		throw {name: "RpcProtocolError", message: "Bad response format: object expected, got " + (typeof response)};
+		throw {name: "RpcProtocolError", message: "Bad response format: object expected, got " + (typeof response), code: 1};
 	}
 	if(response["status"] === undefined){
-		throw {name: "RpcProtocolError", message: "no status"};
+		throw {name: "RpcProtocolError", message: "no status", code: 1};
 	}
 	if(response["result"] === undefined){
-		throw {name: "RpcProtocolError", message: "no result"};
+		throw {name: "RpcProtocolError", message: "no result", code: 1};
 	}
 	if(!response["status"]){
-		throw {name: response["result"]["type"] || "UnknownError", message: response["result"]["message"] || ""};
+		throw {name: response["result"]["type"] || "UnknownError", message: response["result"]["message"] || "", code: response["result"]["code"] || 0};
 	}
 	return response["result"];
 }
