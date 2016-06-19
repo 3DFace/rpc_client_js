@@ -1,7 +1,7 @@
 /* author: Ponomarev Denis <ponomarev@gmail.com> */
 
 import fs from 'fs';
-import CreateNodeRpcClient from './CreateBrowserRpcClient';
+import CreateNodeRpcClient from './CreateNodeRpcClient';
 
 /**
  * @constructor
