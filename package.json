@@ -2,10 +2,17 @@
   "name": "rpc_client",
   "version": "0.0.0",
   "description": "",
-  "main": "./lib/rpc_client",
+  "main": "./lib/rpc_client.min",
   "scripts": {
+    "dist": "npm run build && npm run build-min",
+  	"build-min": "cross-env VERSION=min webpack --optimize-minimize",
+  	"build": "cross-env VERSION=debug webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ponomarev Denis",
-  "license": "Proprietary"
+  "license": "Proprietary",
+  "devDependencies": {
+	"cross-env": "^1.0.8",
+    "webpack": "^2.1.0-beta.5"
+  }
 }

@@ -9,17 +9,18 @@ import request from 'request';
 * @param {?function} post_request_fn hook fn(response, successful)
 * @constructor
 */
-function RequestLayer(url, options, pre_request_fn, post_request_fn){
+function RequestLayer(url, pre_request_fn, post_request_fn){
 
 	this.send = function(request_str){
 
 		return new Promise(function(resolve, reject){
 
-			var requestOptions = Object.assign({jar: true}, options || {}, {
+			var requestOptions = {
 				method: 'POST',
 				uri: url,
-				body: request_str
-			});
+				body: request_str,
+				jar: true
+			};
 
 			pre_request_fn && pre_request_fn(requestOptions);
 

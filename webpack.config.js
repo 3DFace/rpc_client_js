@@ -1,11 +1,12 @@
 var path = require('path');
+var min = process.env.VERSION == "min";
 
 module.exports = {
 	entry: __dirname + '/src/index.js',
 	devtool: 'source-map',
 	output: {
 		path: __dirname + '/lib',
-		filename: 'rpc_client.js',
+		filename: min ? "rpc_client.min.js" : "rpc_client.js",
 		library: 'rpc_client',
 		libraryTarget: 'umd',
 		umdNamedDefine: true
