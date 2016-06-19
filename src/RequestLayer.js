@@ -4,7 +4,6 @@ import request from 'request';
 
 /**
 * @param {string} url RPC-server URL
-* @param {?object} options for 'request' lib
 * @param {?function} pre_request_fn hook fn(requestOptions)
 * @param {?function} post_request_fn hook fn(response, successful)
 * @constructor

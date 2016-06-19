@@ -13,7 +13,8 @@ module.exports = {
 	},
 	externals: {
 		"promise" : "promise",
-		"request" : "request"
+		"request" : "request",
+		"fs" : "fs"
 	},
 	resolve: {
 		root: path.resolve('./src'),
