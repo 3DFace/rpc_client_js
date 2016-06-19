@@ -6,5 +6,6 @@ import JsonLayer from "./JsonLayer";
 import HookLayer from "./HookLayer";
 import ProtocolLayer from "./ProtocolLayer";
 import RpcClient from "./RpcClient";
+import RequestLayer from "./RequestLayer";
 
-export {AjaxLayer, LogLayer, JsonLayer, HookLayer, ProtocolLayer, RpcClient};
+export {AjaxLayer, LogLayer, JsonLayer, HookLayer, ProtocolLayer, RpcClient, RequestLayer};
