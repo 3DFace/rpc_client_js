@@ -6,9 +6,8 @@ import ProtocolLayer from "./ProtocolLayer";
 import RpcClient from "./RpcClient";
 import RequestLayer from "./RequestLayer";
 
-function CreateNodeRpcClient(url, options){
-	var httpOpt = options && options.http || {};
-	var httpLayer = new RequestLayer(url, httpOpt.pre_request, httpOpt.post_request);
+function CreateNodeRpcClient(url, request_fn, options){
+	var httpLayer = new RequestLayer(url, request_fn);
 	var jsonLayer = new JsonLayer(httpLayer);
 	var protocolLayer = new ProtocolLayer(jsonLayer);
 	var lo = options && options.log || {};

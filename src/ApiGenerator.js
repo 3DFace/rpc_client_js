@@ -1,21 +1,19 @@
 /* author: Ponomarev Denis <ponomarev@gmail.com> */
 
-import fs from 'fs';
 import CreateNodeRpcClient from './CreateNodeRpcClient';
 
 /**
  * @constructor
  */
-function ApiGenerator(url){
+function ApiGenerator(url, request_fn){
 
 	var log = console.log.bind(console);
-	var call = CreateNodeRpcClient(url, {log: {error: log}}).call;
+	var call = CreateNodeRpcClient(url, request_fn, {log: {error: log}}).call;
 
-	this.generate = function(rootClassName, rootContainer, targetDir){
-		loadContainer(rootContainer || null).then(function(tree){
+	this.generate = function(rootClassName, rootContainer){
+		return loadContainer(rootContainer || null).then(function(tree){
 			var rootClass = generateContainerClass(rootClassName, tree, "");
-			var body = "// GENERATED CODE\n\n" + rootClass + "\nexport default "  + rootClassName + ";\n";
-			fs.writeFile((targetDir || '' ) + rootClassName + '.js', body, log);
+			return "// GENERATED CODE\n\n" + rootClass + "\nexport default "  + rootClassName + ";\n";
 		}, log);
 	};
 

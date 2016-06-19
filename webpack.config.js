@@ -12,9 +12,7 @@ module.exports = {
 		umdNamedDefine: true
 	},
 	externals: {
-		"promise" : "promise",
-		"request" : "request",
-		"fs" : "fs"
+		"promise" : "promise"
 	},
 	resolve: {
 		root: path.resolve('./src'),
