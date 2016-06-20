@@ -12,7 +12,7 @@ function ApiGenerator(url, request_fn){
 
 	this.generate = function(rootClassName, rootContainer){
 		return loadContainer(rootContainer || null).then(function(tree){
-			var rootClass = generateContainerClass(rootClassName, tree, "");
+			var rootClass = generateContainerClass(rootClassName, tree, "", rootContainer || null);
 			return "// GENERATED CODE\n\n" + rootClass + "\nexport default "  + rootClassName + ";\n";
 		}, log);
 	};
