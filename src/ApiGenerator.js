@@ -8,17 +8,33 @@ import CreateNodeRpcClient from './CreateNodeRpcClient';
 function ApiGenerator(url, request_fn){
 
 	var log = console.log.bind(console);
-	var call = CreateNodeRpcClient(url, request_fn, {log: {error: log}}).call;
+	var call = CreateNodeRpcClient(url, request_fn, {log: {request: log, error: log}}).call;
 
-	this.generate = function(rootClassName, rootContainer){
-		return loadContainer(rootContainer || null).then(function(tree){
-			var rootClass = generateContainerClass(rootClassName, tree, "", rootContainer || null);
-			return "// GENERATED CODE\n\n" + rootClass + "\nexport default "  + rootClassName + ";\n";
+	this.generate = function(className, path){
+		var rootContainer, serviceName;
+		if(path){
+			var pathArr = path.split("/");
+			serviceName = pathArr.pop();
+			rootContainer = pathArr.join("/");
+		}else{
+			rootContainer = null;
+			serviceName = null;
+		}
+		return loadContainer(rootContainer).then(function(tree){
+			var service;
+			if(serviceName){
+				service = tree.items.find(function(i){
+					return i.name == serviceName;
+				});
+			}else{
+				service = tree;
+			}
+			var classDef = generateSomething(className, service, "", path);
+			return "// GENERATED CODE\n\n" + classDef + "\nexport default "  + className + ";\n";
 		}, log);
 	};
 
 	function loadContainer(pathName){
-
 		return new Promise(function(resolve, reject){
 			call("explorer", "getServicesInfo", [pathName]).then(function(items){
 				var subPromises = [];
@@ -41,12 +57,13 @@ function ApiGenerator(url, request_fn){
 		})
 	}
 
-	function generateServiceClass(className, serviceDef, indent){
+	function generateServiceClass(className, serviceDef, indent, iPath){
 		var result = "";
 		result += indent + "/**\n";
 		result += indent + " * @constructor\n";
 		result += indent + " */\n";
-		result += indent + "function " + className + "(call, servicePath){\n";
+		result += indent + "function " + className + "(call){\n\n";
+		result += indent + "\tvar servicePath = '" + iPath + "';\n";
 		serviceDef.methods.forEach(function(m){
 			result += "\n";
 			var params = m.params.join(", ");
@@ -63,7 +80,6 @@ function ApiGenerator(url, request_fn){
 
 	function generateContainerClass(className, tree, indent, path){
 		var result = "";
-		var services = [];
 		result += indent + "/**\n";
 		result += indent + " * @constructor\n";
 		result += indent + " */\n";
@@ -72,21 +88,21 @@ function ApiGenerator(url, request_fn){
 			var iClass = i.name[0].toUpperCase() + i.name.substr(1);
 			var iVar = i.name;
 			var iPath = path ? path + '/' + i.name : i.name;
-			var service;
-			if(i.container){
-				result += "\n" + generateContainerClass(iClass, i, indent + "\t", iPath);
-				service = indent + "\tthis." + iVar + " = new " + iClass + "(call);\n";
-			}else{
-				result += "\n" + generateServiceClass(iClass, i, indent + "\t");
-				service = indent + "\tthis." + iVar + " = new " + iClass + "(call, '" + iPath + "');\n";
-			}
-			services.push(service);
+			result += "\n" + generateSomething(iClass, i, indent + "\t", iPath);
+			result += "\n" + indent + "\tthis." + iVar + " = new " + iClass + "(call);\n";
 		});
-		result += "\n" + services.join("") + "\n";
 		result += indent + "}\n";
 		return result;
 	}
 
+	function generateSomething(className, definition, indent, iPath){
+		if(definition.container){
+			return generateContainerClass(className, definition, indent, iPath);
+		}else{
+			return generateServiceClass(className, definition, indent, iPath);
+		}
+	}
+	
 }
 
 export default ApiGenerator;

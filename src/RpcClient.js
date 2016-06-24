@@ -18,7 +18,16 @@ function RpcClient(protocol_layer){
 		var batchLayer = new BatchLayer();
 		var batchClient = new RpcClient(batchLayer);
 		callback(batchClient);
-		return batchLayer.flush(protocol_layer);
+		var promises = batchLayer.flush(protocol_layer);
+		return new Promise(function(resolve){
+			var wait = promises.length;
+			function done(){
+				--wait || resolve();
+			}
+			promises.forEach(function(p){
+				p.then(done, done);
+			});
+		});
 	};
 
 }
